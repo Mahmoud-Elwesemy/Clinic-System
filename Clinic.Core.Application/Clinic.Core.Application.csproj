@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Clinic.Core.Application.Abstraction\Clinic.Core.Application.Abstraction.csproj" />
+    <ProjectReference Include="..\Clinic.Core.Domin\Clinic.Core.Domin.csproj" />
+    <ProjectReference Include="..\Clinic.Infrastructure.Presistence\Clinic.Infrastructure.Presistence.csproj" />
+  </ItemGroup>
+
+</Project>
