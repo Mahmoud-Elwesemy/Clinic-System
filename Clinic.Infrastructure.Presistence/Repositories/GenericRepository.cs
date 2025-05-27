@@ -12,40 +12,79 @@ namespace Clinic.Infrastructure.Presistence.Repositories;
 public class GenericRepository<T, Tkey>:IGenericRepository<T,Tkey> where T : class where Tkey : IEquatable<Tkey>
 {
     private readonly ApplicationContext _context;
-
+    private readonly DbSet<T> _dbSet;
     public GenericRepository(ApplicationContext context)
     {
         _context = context;
+        _dbSet = context.Set<T>();
     }
     //----------------------------------------------------------------------------
 
     public async Task<IEnumerable<T>> GetAllAsync()
     {
-        return await _context.Set<T>().ToListAsync();
+        return await _dbSet
+            .Where(e => EF.Property<bool>(e,"IsDeleted") == false)
+            .ToListAsync();
     }
-
+    public async Task<IEnumerable<T>> GetDeletedOnlyAsync()
+    {
+        return await _dbSet
+            .Where(e => EF.Property<bool>(e,"IsDeleted") == true)
+            .ToListAsync();
+    }
+    public async Task<IEnumerable<T>> GetAllIncludingDeletedAsync()
+    {
+        return await _dbSet.ToListAsync();
+    }
     public async Task<T?> GetByIdAsync(Tkey id)
     {
-       return await _context.Set<T>().FindAsync(id);
+        return await _dbSet.FindAsync(id);
     }
 
     public async Task AddAsync(T entity)
     {
-         await _context.Set<T>().AddAsync(entity);
+        await _dbSet.AddAsync(entity);
     }
 
-    public Task UpdateAsync(T entity)
+    public void UpdateAsync(T entity)
     {
-        _context.Set<T>().Update(entity);
-        return Task.CompletedTask;
+        _dbSet.Update(entity);
+        
     }
 
-    public async Task DeleteAsync(Tkey id)
+    public async Task SoftDeleteAsync(Tkey id)
     {
-        var entity = await GetByIdAsync(id);
-        if(entity != null)
+        var entity = await _dbSet.FindAsync(id);
+        if(entity == null)
+            return;
+
+        var isDeletedProp = typeof(T).GetProperty("IsDeleted");
+        if(isDeletedProp != null && isDeletedProp.PropertyType == typeof(bool))
         {
-            _context.Set<T>().Remove(entity);
+            isDeletedProp.SetValue(entity,true);
+            _context.Entry(entity).State = EntityState.Modified;
+        }
+    }
+
+    public async Task HardDeleteAsync(Tkey id)
+    {
+        var entity = await _dbSet.FindAsync(id);
+        if(entity == null)
+            return;
+        _dbSet.Remove(entity);
+    }
+
+    public async Task RestoreByIdAsync(Tkey id)
+    {
+        var entity = await _dbSet.FindAsync(id);
+        if(entity == null)
+            return;
+
+        var isDeletedProp = typeof(T).GetProperty("IsDeleted");
+        if(isDeletedProp != null && isDeletedProp.PropertyType == typeof(bool))
+        {
+            isDeletedProp.SetValue(entity,false);
+            _context.Entry(entity).State = EntityState.Modified;
         }
     }
 }

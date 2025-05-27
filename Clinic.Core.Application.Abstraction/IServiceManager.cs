@@ -1,4 +1,5 @@
 ﻿using Clinic.Core.Application.Abstraction.Auth;
+using Clinic.Core.Application.Abstraction.Medicine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,4 +13,5 @@ public interface IServiceManager
     public IJWTProvider JWTProvider { get; }
     public IRoleService RoleService { get; }
     public IUserService UserService { get; }
+    public IMedicineService MedicineService { get; }
 }

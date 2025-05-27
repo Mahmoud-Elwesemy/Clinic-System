@@ -10,8 +10,12 @@ public interface IGenericRepository<T, Tkey> where T : class where Tkey : IEquat
 {
     // This Is GRUD Operations Methods   
     Task<IEnumerable<T>> GetAllAsync();
+    Task<IEnumerable<T>> GetDeletedOnlyAsync();
+    Task<IEnumerable<T>> GetAllIncludingDeletedAsync();
     Task<T?> GetByIdAsync(Tkey id);
     Task AddAsync(T entity);
-    Task UpdateAsync(T entity);
-    Task DeleteAsync(Tkey id);
+    void UpdateAsync(T entity);
+    Task SoftDeleteAsync(Tkey id);
+    Task HardDeleteAsync(Tkey id);
+    Task RestoreByIdAsync(Tkey id);
 }

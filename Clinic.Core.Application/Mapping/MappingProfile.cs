@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Clinic.Core.Application.Abstraction.Auth.Model;
+using Clinic.Core.Application.Abstraction.Medicine.Models;
 using Clinic.Core.Domin.Entities;
 using Clinic.Core.Domin.Entities.Users;
 using System;
@@ -32,5 +33,29 @@ public class MappingProfile:Profile
         //CreateMap<AccountProfileDTO,Doctor>().ReverseMap();
 
         #endregion
+        CreateMap<Medicine,MedicineDTO>()
+            .ForMember(dest => dest.Id,opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name,opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
+            .ForMember(dest => dest.Description,opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.QuantityAvailable,opt => opt.MapFrom(src => src.QuantityAvailable))
+            .ForMember(dest => dest.PharmacistName,opt => opt.MapFrom(src => src.Pharmacist!.FullName))
+            .ReverseMap();
+        CreateMap<Medicine,AddMedicineDTO>()
+            .ForMember(dest => dest.Name,opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Description,opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.QuantityAvailable,opt => opt.MapFrom(src => src.QuantityAvailable))
+            .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
+            .ForMember(dest => dest.PharmacistId,opt => opt.MapFrom(src => src.PharmacistId))
+            .ReverseMap();
+        CreateMap<Medicine,UpdateMedicineDTO>()
+            .ForMember(dest => dest.Id,opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.Name,opt => opt.MapFrom(src => src.Name))
+            .ForMember(dest => dest.Description,opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.QuantityAvailable,opt => opt.MapFrom(src => src.QuantityAvailable))
+            .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
+            .ReverseMap();
+
+
     }
 }
