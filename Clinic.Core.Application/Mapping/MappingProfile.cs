@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Clinic.Core.Application.Abstraction.Appointment.Models;
 using Clinic.Core.Application.Abstraction.Auth.Model;
 using Clinic.Core.Application.Abstraction.Medicine.Models;
 using Clinic.Core.Domin.Entities;
@@ -54,6 +55,15 @@ public class MappingProfile:Profile
             .ForMember(dest => dest.Description,opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.QuantityAvailable,opt => opt.MapFrom(src => src.QuantityAvailable))
             .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
+            .ReverseMap();
+        CreateMap<Appointment,AppointmentDto>()
+            .ForMember(dest => dest.PatientName,opt => opt.MapFrom(src => src.Patient!.FullName))
+            .ForMember(dest => dest.DoctorName,opt => opt.MapFrom(src => src.DoctorId))
+            .ReverseMap();
+        CreateMap<Appointment,AddAppointmentDto>()
+            .ForMember(dest => dest.PatientId,opt => opt.MapFrom(src => src.PatientId))
+            .ForMember(dest => dest.DoctorId,opt => opt.MapFrom(src => src.DoctorId))
+
             .ReverseMap();
 
 

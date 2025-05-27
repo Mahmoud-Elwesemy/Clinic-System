@@ -136,7 +136,7 @@ namespace Clinic
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
+            app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();

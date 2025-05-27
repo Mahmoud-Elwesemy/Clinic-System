@@ -1,4 +1,5 @@
-﻿using Clinic.Core.Application.Abstraction.Auth;
+﻿using Clinic.Core.Application.Abstraction.Appointment;
+using Clinic.Core.Application.Abstraction.Auth;
 using Clinic.Core.Application.Abstraction.Medicine;
 using System;
 using System.Collections.Generic;
@@ -14,4 +15,5 @@ public interface IServiceManager
     public IRoleService RoleService { get; }
     public IUserService UserService { get; }
     public IMedicineService MedicineService { get; }
+    public IAppointmentService AppointmentService { get; }
 }
