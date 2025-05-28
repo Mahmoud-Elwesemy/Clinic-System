@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Clinic.Core.Application.Abstraction.Auth.Model;
+using Clinic.Core.Application.Abstraction.AvailableLabTest.Models;
 using Clinic.Core.Application.Abstraction.Medicine.Models;
 using Clinic.Core.Domin.Entities;
 using Clinic.Core.Domin.Entities.Users;
@@ -33,6 +34,8 @@ public class MappingProfile:Profile
         //CreateMap<AccountProfileDTO,Doctor>().ReverseMap();
 
         #endregion
+
+        #region  Configratio Of Medicine
         CreateMap<Medicine,MedicineDTO>()
             .ForMember(dest => dest.Id,opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.Name,opt => opt.MapFrom(src => src.Name))
@@ -55,7 +58,29 @@ public class MappingProfile:Profile
             .ForMember(dest => dest.QuantityAvailable,opt => opt.MapFrom(src => src.QuantityAvailable))
             .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
             .ReverseMap();
+        #endregion
 
+        #region  Configratio Of AvailableLabTest
+        CreateMap<AvailableLabTest,AvailableLabTestDTO>()
+            .ForMember(dest => dest.Id,opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.TestName,opt => opt.MapFrom(src => src.TestName))
+            .ForMember(dest => dest.Description,opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
+            .ForMember(dest => dest.LabTechnicianName,opt => opt.MapFrom(src => src.LabTechnician.FullName))
+            .ForMember(dest => dest.LabTechnicianId,opt => opt.MapFrom(src => src.LabTechnicianId))
+            .ReverseMap();
+        CreateMap<AvailableLabTest,AddAvailableLabTestDTO>()
+            .ForMember(dest => dest.TestName,opt => opt.MapFrom(src => src.TestName))
+            .ForMember(dest => dest.Description,opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))         
+            .ReverseMap();
+        CreateMap<AvailableLabTest,UpdateAvailableLabTestDTO>()
+            .ForMember(dest => dest.Id,opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.TestName,opt => opt.MapFrom(src => src.TestName))
+            .ForMember(dest => dest.Description,opt => opt.MapFrom(src => src.Description))
+            .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
+            .ReverseMap(); 
+        #endregion
 
     }
 }

@@ -25,6 +25,10 @@ internal class MedicineService(IUnitOfWork unitOfWork,IMapper mapper):IMedicineS
     public async Task<MedicineDTO> GetMedicineByIdAsync(int id)
     {
         var medicine = await _unitOfWork.GetRepository<Medicine,int>().GetByIdAsync(id);
+        if(medicine == null)
+        {
+            throw new KeyNotFoundException($"Medicine with ID {id} not found.");
+        }
         return _mapper.Map<MedicineDTO>(medicine);
     }
 

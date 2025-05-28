@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
 using Clinic.Core.Application.Abstraction;
 using Clinic.Core.Application.Abstraction.Auth;
+using Clinic.Core.Application.Abstraction.AvailableLabTest;
 using Clinic.Core.Application.Abstraction.Medicine;
 using Clinic.Core.Application.Services.AuthServices;
+using Clinic.Core.Application.Services.AvailableLabTestServices;
 using Clinic.Core.Application.Services.MedicineServices;
 using Clinic.Core.Domin.Entities;
 using Clinic.Core.Domin.Entities_Helper;
@@ -23,6 +25,7 @@ public class ServiceManager:IServiceManager
     private readonly Lazy<IRoleService> _roleService;
     private readonly Lazy<IUserService> _userService;
     private readonly Lazy<IMedicineService> _medicineService;
+    private readonly Lazy<IAvailableLabTestService> _availableLabTestService;
 
     public ServiceManager
         (
@@ -35,6 +38,7 @@ public class ServiceManager:IServiceManager
         _roleService = new Lazy<IRoleService>(() => new RoleService(roleManager,Context));
         _userService = new Lazy<IUserService>(() => new UsersService(userManager,_jwtProvider.Value,mapper,Context));
         _medicineService = new Lazy<IMedicineService>(() => new MedicineService(unitOfWork,mapper));
+        _availableLabTestService = new Lazy<IAvailableLabTestService>(() =>new AvailableLabTestService(unitOfWork,mapper));
 
     }
 
@@ -47,4 +51,6 @@ public class ServiceManager:IServiceManager
     public IUserService UserService => _userService.Value;
 
     public IMedicineService MedicineService => _medicineService.Value;
+
+    public IAvailableLabTestService availableLabTestService => _availableLabTestService.Value;
 }

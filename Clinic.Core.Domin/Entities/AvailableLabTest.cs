@@ -22,7 +22,7 @@ public class AvailableLabTest
     // Object From LabTechnician With Many To One Relationship And Foreign Key Is LabTechnicianId
     [ForeignKey(nameof(LabTechnician))]
     public string LabTechnicianId { get; set; } = string.Empty;
-    public virtual LabTechnician LabTechnician { get; set; } = new();
+    public virtual LabTechnician? LabTechnician { get; set; }
 
     // Collection Of LabTest With One To Many Relationship
     public virtual ICollection<LabTest>? LabTests { get; set; }
