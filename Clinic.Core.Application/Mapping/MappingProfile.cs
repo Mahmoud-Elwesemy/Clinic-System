@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Clinic.Core.Application.Abstraction.Appointment.Models;
 using Clinic.Core.Application.Abstraction.Auth.Model;
 using Clinic.Core.Application.Abstraction.AvailableLabTest.Models;
 using Clinic.Core.Application.Abstraction.Medicine.Models;
@@ -58,7 +59,15 @@ public class MappingProfile:Profile
             .ForMember(dest => dest.QuantityAvailable,opt => opt.MapFrom(src => src.QuantityAvailable))
             .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
             .ReverseMap();
-        #endregion
+        CreateMap<Appointment,AppointmentDto>()
+            .ForMember(dest => dest.PatientName,opt => opt.MapFrom(src => src.Patient!.FullName))
+            .ForMember(dest => dest.DoctorName,opt => opt.MapFrom(src => src.DoctorId))
+            .ReverseMap();
+        CreateMap<Appointment,AddAppointmentDto>()
+            .ForMember(dest => dest.PatientId,opt => opt.MapFrom(src => src.PatientId))
+            .ForMember(dest => dest.DoctorId,opt => opt.MapFrom(src => src.DoctorId))
+
+            .ReverseMap();
 
         #region  Configratio Of AvailableLabTest
         CreateMap<AvailableLabTest,AvailableLabTestDTO>()

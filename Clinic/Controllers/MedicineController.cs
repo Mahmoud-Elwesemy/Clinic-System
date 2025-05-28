@@ -1,5 +1,6 @@
 ﻿using Clinic.Core.Application.Abstraction;
 using Clinic.Core.Application.Abstraction.Medicine.Models;
+using Clinic.Infrastructure.Presistence.Helper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,7 +23,7 @@ public class MedicineController(IServiceManager serviceManager):ControllerBase
         var medicine = await _serviceManager.MedicineService.GetMedicineByIdAsync(id);
         if(medicine == null)
         {
-            return NotFound();
+            return NotFound(new ResponseAPI(StatusCodes.Status404NotFound));
         }
         return Ok(medicine);
     }
@@ -43,17 +44,17 @@ public class MedicineController(IServiceManager serviceManager):ControllerBase
     {
         if(medicine == null)
         {
-            return BadRequest("Medicine cannot be null");
+            return BadRequest(new ResponseAPI( StatusCodes.Status400BadRequest,"Medicine cannot be null"));
         }
         await _serviceManager.MedicineService.AddMedicineAsync(medicine);
-        return Ok();
+        return Ok(new ResponseAPI(StatusCodes.Status201Created));
     }
     [HttpPut("UpdateMedicine")]
     public async Task<ActionResult> UpdateMedicine([FromBody] UpdateMedicineDTO medicine)
     {
         if(medicine == null)
         {
-            return BadRequest("Medicine cannot be null");
+            return BadRequest(new ResponseAPI(StatusCodes.Status400BadRequest,"Medicine cannot be null"));
         }
         await _serviceManager.MedicineService.UpdateMedicineAsync(medicine);
         return Ok();
@@ -64,7 +65,7 @@ public class MedicineController(IServiceManager serviceManager):ControllerBase
         var medicine = await _serviceManager.MedicineService.GetMedicineByIdAsync(id);
         if(medicine == null)
         {
-            return NotFound();
+            return NotFound(new ResponseAPI(StatusCodes.Status404NotFound));
         }
         await _serviceManager.MedicineService.HardDeleteMedicineAsync(id);
         return Ok();
@@ -75,7 +76,7 @@ public class MedicineController(IServiceManager serviceManager):ControllerBase
         var medicine = await _serviceManager.MedicineService.GetMedicineByIdAsync(id);
         if(medicine == null)
         {
-            return NotFound();
+            return NotFound(new ResponseAPI(StatusCodes.Status404NotFound));
         }
         await _serviceManager.MedicineService.SoftDeleteMedicineAsync(id);
         return Ok();

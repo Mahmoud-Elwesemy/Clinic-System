@@ -1,4 +1,5 @@
-﻿using Clinic.Core.Application.Abstraction.Auth;
+﻿using Clinic.Core.Application.Abstraction.Appointment;
+using Clinic.Core.Application.Abstraction.Auth;
 using Clinic.Core.Application.Abstraction.AvailableLabTest;
 using Clinic.Core.Application.Abstraction.Medicine;
 using System;
@@ -15,5 +16,6 @@ public interface IServiceManager
     public IRoleService RoleService { get; }
     public IUserService UserService { get; }
     public IMedicineService MedicineService { get; }
+    public IAppointmentService AppointmentService { get; }
     public IAvailableLabTestService availableLabTestService { get; }
 }
