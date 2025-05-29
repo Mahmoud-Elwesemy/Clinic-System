@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 namespace Clinic.Core.Application.Abstraction.Appointment.Models;
 public record AppointmentDto
 {
+    public int Id { get; set; }
     public DateTime AppointmentDate { get; set; }
     public DateTime CreatedAt { get; set; }
     public AppointmentStatus AppointmentStatus { get; set; }
@@ -18,17 +19,31 @@ public record AppointmentDto
     public  string DoctorName { get; set; } = string.Empty;
     public bool IsDeleted { get; set; }
 }
+
 public record AddAppointmentDto
 {
     [JsonIgnore]
     public DateTime AppointmentDate { get; set; } = DateTime.Now;
     [JsonIgnore]
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+    [JsonIgnore]
     public AppointmentStatus AppointmentStatus { get; set; }
     public PaymentType PaymentType { get; set; }
     public AppointmentType appointmentType { get; set; }
+    [JsonIgnore]
     public string PatientId { get; set; } = string.Empty;
+    [JsonIgnore]
     public string DoctorId { get; set; } = string.Empty;
-    public bool IsDeleted { get; set; }
+    [JsonIgnore]
+    public bool IsDeleted { get; set; }= false;
 
-};
+}
+
+public record UpdateAppointmentDto
+{
+    public int Id { get; set; }
+    public DateTime AppointmentDate { get; set; }    
+    public AppointmentStatus AppointmentStatus { get; set; }
+    public PaymentType PaymentType { get; set; }
+    public AppointmentType appointmentType { get; set; }
+}

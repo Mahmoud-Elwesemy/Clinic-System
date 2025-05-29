@@ -12,6 +12,7 @@ using Clinic.Core.Domin.Entities;
 using Clinic.Core.Domin.Entities_Helper;
 using Clinic.Core.Domin.UnitOfWork.Contract;
 using Clinic.Infrastructure.Presistence.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System;
@@ -34,14 +35,14 @@ public class ServiceManager:IServiceManager
         (
         IUnitOfWork unitOfWork,IMapper mapper,UserManager<ApplicationUser> userManager,
         ApplicationContext Context ,RoleManager<ApplicationRole> roleManager,
-        IOptions<JwtSettings> jwtOptions
+        IOptions<JwtSettings> jwtOptions ,IHttpContextAccessor httpContextAccessor
         )
     {
         _jwtProvider = new Lazy<IJWTProvider>(() => new JWTProvider(jwtOptions));
         _roleService = new Lazy<IRoleService>(() => new RoleService(roleManager,Context));
         _userService = new Lazy<IUserService>(() => new UsersService(userManager,_jwtProvider.Value,mapper,Context));
         _medicineService = new Lazy<IMedicineService>(() => new MedicineService(unitOfWork,mapper));
-        _appointmentService = new Lazy<IAppointmentService>(() => new AppointmentService(unitOfWork,mapper));
+        _appointmentService = new Lazy<IAppointmentService>(() => new AppointmentService(unitOfWork,mapper ,httpContextAccessor));
         _availableLabTestService = new Lazy<IAvailableLabTestService>(() =>new AvailableLabTestService(unitOfWork,mapper));
 
     }

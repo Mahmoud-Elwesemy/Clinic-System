@@ -39,7 +39,8 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options):Id
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         base.OnConfiguring(optionsBuilder);
-        optionsBuilder.ConfigureWarnings(warnings =>
+        optionsBuilder.UseLazyLoadingProxies()
+            .ConfigureWarnings(warnings =>
             warnings.Ignore(RelationalEventId.PendingModelChangesWarning));
     }
 

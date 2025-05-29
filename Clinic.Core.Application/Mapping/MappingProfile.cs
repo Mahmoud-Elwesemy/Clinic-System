@@ -25,6 +25,7 @@ public class MappingProfile:Profile
            .ForMember(dest => dest.Email,opt => opt.MapFrom(src => src.Email))
            .ReverseMap();
         #endregion
+
         #region Configratio Of Account Profile 
         CreateMap<AccountProfileDTO,ApplicationUser>()
             .ForMember(dest => dest.Email,opt => opt.MapFrom(src => src.Email))
@@ -33,7 +34,7 @@ public class MappingProfile:Profile
             .ReverseMap();
         //CreateMap<AccountProfileDTO,ApplicationUser>().ReverseMap();
         //CreateMap<AccountProfileDTO,Doctor>().ReverseMap();
-
+        
         #endregion
 
         #region  Configratio Of Medicine
@@ -59,15 +60,25 @@ public class MappingProfile:Profile
             .ForMember(dest => dest.QuantityAvailable,opt => opt.MapFrom(src => src.QuantityAvailable))
             .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
             .ReverseMap();
-        CreateMap<Appointment,AppointmentDto>()
-            .ForMember(dest => dest.PatientName,opt => opt.MapFrom(src => src.Patient!.FullName))
-            .ForMember(dest => dest.DoctorName,opt => opt.MapFrom(src => src.DoctorId))
+        #endregion
+
+        #region  Configratio Of Appointment
+        CreateMap<Appointment,AppointmentDto>()        
+            .ForMember(dest => dest.PatientName,opt => opt.MapFrom(src => src.Patient!.FullName ?? ""))
+            .ForMember(dest => dest.DoctorName,opt => opt.MapFrom(src => src.Doctor!.FullName))
             .ReverseMap();
         CreateMap<Appointment,AddAppointmentDto>()
             .ForMember(dest => dest.PatientId,opt => opt.MapFrom(src => src.PatientId))
             .ForMember(dest => dest.DoctorId,opt => opt.MapFrom(src => src.DoctorId))
-
+            .ReverseMap(); 
+        CreateMap<Appointment,UpdateAppointmentDto>()
+            .ForMember(dest => dest.Id,opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.AppointmentDate,opt => opt.MapFrom(src => src.AppointmentDate))
+            .ForMember(dest => dest.AppointmentStatus,opt => opt.MapFrom(src => src.AppointmentStatus))
+            .ForMember(dest => dest.PaymentType,opt => opt.MapFrom(src => src.PaymentType))
+            .ForMember(dest => dest.appointmentType,opt => opt.MapFrom(src => src.appointmentType))
             .ReverseMap();
+        #endregion
 
         #region  Configratio Of AvailableLabTest
         CreateMap<AvailableLabTest,AvailableLabTestDTO>()
@@ -75,7 +86,7 @@ public class MappingProfile:Profile
             .ForMember(dest => dest.TestName,opt => opt.MapFrom(src => src.TestName))
             .ForMember(dest => dest.Description,opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
-            .ForMember(dest => dest.LabTechnicianName,opt => opt.MapFrom(src => src.LabTechnician.FullName))
+            .ForMember(dest => dest.LabTechnicianName,opt => opt.MapFrom(src => src.LabTechnician!.FullName))
             .ForMember(dest => dest.LabTechnicianId,opt => opt.MapFrom(src => src.LabTechnicianId))
             .ReverseMap();
         CreateMap<AvailableLabTest,AddAvailableLabTestDTO>()

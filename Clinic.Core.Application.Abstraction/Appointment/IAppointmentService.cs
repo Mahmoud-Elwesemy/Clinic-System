@@ -12,9 +12,9 @@ public interface IAppointmentService
     Task<IEnumerable<AppointmentDto>> GetAllAppointmentAsync();
     Task<IEnumerable<AppointmentDto>> GetAllIncludingDeletedAsync();
     Task<IEnumerable<AppointmentDto>> GetDeletedOnlyAsync();
-    Task<MedicineDTO> GetAppointmentByIdAsync(int id);
+    Task<AppointmentDto> GetAppointmentByIdAsync(int id);
     Task AddAppointmentAsync(AddAppointmentDto Entity);
-    void UpdateAppointmentAsync(UpdateMedicineDTO Entity);
+    Task UpdateAppointmentAsync(UpdateAppointmentDto Entity);
     Task HardDeleteAppointmentAsync(int id);
     Task SoftDeleteAppointmentAsync(int id);
     Task RestoreAppointmentAsync(int id);

@@ -36,6 +36,9 @@ namespace Clinic
             builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
             builder.Services.AddScoped(typeof(IUnitOfWork),typeof(UnitOfWork));
             builder.Services.AddScoped(typeof(IServiceManager),typeof(ServiceManager));
+            builder.Services.AddHttpContextAccessor();
+           
+
 
             builder.Services.AddIdentity<ApplicationUser,ApplicationRole>()
                 .AddEntityFrameworkStores<ApplicationContext>().
