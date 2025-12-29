@@ -2,14 +2,13 @@
 using Clinic.Core.Application.Abstraction.Appointment.Models;
 using Clinic.Core.Application.Abstraction.Auth.Model;
 using Clinic.Core.Application.Abstraction.AvailableLabTest.Models;
+using Clinic.Core.Application.Abstraction.Diagnosis.Models;
+using Clinic.Core.Application.Abstraction.LabTest.Models;
 using Clinic.Core.Application.Abstraction.Medicine.Models;
+using Clinic.Core.Application.Abstraction.Visit.Models;
+using Clinic.Core.Application.Abstraction.WorkingDay.Models;
 using Clinic.Core.Domin.Entities;
 using Clinic.Core.Domin.Entities.Users;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Clinic.Core.Application.Mapping;
 public class MappingProfile:Profile
@@ -17,7 +16,7 @@ public class MappingProfile:Profile
     public MappingProfile()
     {
         #region Configratio Of Account
-        CreateMap<RegisterPatientDTO,ApplicationUser>()
+        CreateMap<RegisterPatientDTO,Patient>()
            .ForMember(dest => dest.UserName,opt => opt.MapFrom(src => src.Email))
            .ForMember(dest => dest.PhoneNumber,opt => opt.MapFrom(src => src.PhoneNumber))
            .ForMember(dest => dest.WhatsAppNumber,opt => opt.MapFrom(src => src.WhatsAppNumber))
@@ -63,21 +62,15 @@ public class MappingProfile:Profile
         #endregion
 
         #region  Configratio Of Appointment
-        CreateMap<Appointment,AppointmentDto>()        
-            .ForMember(dest => dest.PatientName,opt => opt.MapFrom(src => src.Patient!.FullName ?? ""))
-            .ForMember(dest => dest.DoctorName,opt => opt.MapFrom(src => src.Doctor!.FullName))
-            .ReverseMap();
+        CreateMap<Appointment,AppointmentDto>()
+             .ForMember(dest => dest.DoctorName,opt => opt.MapFrom(src => src.Doctor != null ? src.Doctor.FullName : null))
+             .ForMember(dest => dest.PatientName,opt => opt.MapFrom(src => src.Patient != null ? src.Patient.FullName : null))
+             .ReverseMap();
         CreateMap<Appointment,AddAppointmentDto>()
             .ForMember(dest => dest.PatientId,opt => opt.MapFrom(src => src.PatientId))
             .ForMember(dest => dest.DoctorId,opt => opt.MapFrom(src => src.DoctorId))
             .ReverseMap(); 
-        CreateMap<Appointment,UpdateAppointmentDto>()
-            .ForMember(dest => dest.Id,opt => opt.MapFrom(src => src.Id))
-            .ForMember(dest => dest.AppointmentDate,opt => opt.MapFrom(src => src.AppointmentDate))
-            .ForMember(dest => dest.AppointmentStatus,opt => opt.MapFrom(src => src.AppointmentStatus))
-            .ForMember(dest => dest.PaymentType,opt => opt.MapFrom(src => src.PaymentType))
-            .ForMember(dest => dest.appointmentType,opt => opt.MapFrom(src => src.appointmentType))
-            .ReverseMap();
+        CreateMap<Appointment,UpdateAppointmentDto>().ReverseMap();
         #endregion
 
         #region  Configratio Of AvailableLabTest
@@ -99,8 +92,39 @@ public class MappingProfile:Profile
             .ForMember(dest => dest.TestName,opt => opt.MapFrom(src => src.TestName))
             .ForMember(dest => dest.Description,opt => opt.MapFrom(src => src.Description))
             .ForMember(dest => dest.Price,opt => opt.MapFrom(src => src.Price))
-            .ReverseMap(); 
+            .ReverseMap();
         #endregion
 
+        #region Configratio Of WorkingDay
+        CreateMap<WorkingDay,WorkingDayDTO>().ReverseMap();
+        CreateMap<WorkingDay,AddWorkingDayDTO>().ReverseMap();
+        CreateMap<WorkingDay,UpdateWorkingDayDTO>().ReverseMap();
+        #endregion
+
+        #region Configratio Of Visit
+        CreateMap<Visit,VisitDTO>()
+          .ForMember(dest => dest.PatientFullName,
+              opt => opt.MapFrom(src => src.Patient.FullName))
+          .ForMember(dest => dest.DoctorFullName,
+              opt => opt.MapFrom(src => src.Doctor.FullName))
+          .ReverseMap();
+
+        CreateMap<AddVisitDTO,Visit>().ReverseMap();
+        CreateMap<UpdateVisitDTO,Visit>().ReverseMap();
+        #endregion
+
+        #region Configratio Of Diagnosis
+        CreateMap<Diagnosis,DiagnosisDTO>().ReverseMap();
+        CreateMap<Diagnosis,AddDiagnosisDTO>().ReverseMap();
+        CreateMap<Diagnosis,UpdateDiagnosisDTO>().ReverseMap();
+        #endregion
+
+        #region Configratio Of LabTest
+        CreateMap<LabTest,LabTestDTO>()
+            .ReverseMap();
+
+        CreateMap<LabTest,UpdateLabTestsDTO>()
+            .ReverseMap(); 
+        #endregion
     }
 }

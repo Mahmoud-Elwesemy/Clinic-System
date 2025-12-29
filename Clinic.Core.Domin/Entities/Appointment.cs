@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Clinic.Core.Domin.Entities;
-// جدول الحجوزات
 public class Appointment
 {
     public int Id { get; set; }
@@ -21,13 +20,13 @@ public class Appointment
 
     // Objects From Patient With Many To One Relationship And Foreign Key Is PatientId
     [ForeignKey(nameof(Patient))]
-    public string PatientId { get; set; } = string.Empty;
-    public virtual Patient? Patient { get; set; } 
+    public string PatientId { get; set; } 
+    public virtual Patient Patient { get; set; } 
 
     // Object From Doctor With Many To One Relationship And Foreign Key Is DoctorId
     [ForeignKey(nameof(Doctor))]
-    public string DoctorId { get; set; } = string.Empty;
-    public virtual Doctor? Doctor { get; set; } 
+    public string DoctorId { get; set; } 
+    public virtual Doctor Doctor { get; set; } 
 
     // Object From Visit With One To One Relationship (navigation property)
     public virtual Visit? Visit { get; set; }

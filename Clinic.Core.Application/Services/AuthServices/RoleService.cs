@@ -5,11 +5,6 @@ using Clinic.Core.Domin.Entities_Helper;
 using Clinic.Infrastructure.Presistence.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Clinic.Core.Application.Services.AuthServices;
 internal class RoleService(RoleManager<ApplicationRole> roleManager,ApplicationContext context):IRoleService
@@ -17,7 +12,6 @@ internal class RoleService(RoleManager<ApplicationRole> roleManager,ApplicationC
     private readonly RoleManager<ApplicationRole> _roleManager = roleManager;
     private readonly ApplicationContext _context = context;
     //---------------------------------------------------------------------------------------------------------
-
     public async Task<IEnumerable<RoleResponseDTO>> GetAllRolesAsync(CancellationToken cancellationToken = default)
     {
         return await _roleManager.Roles
@@ -28,9 +22,7 @@ internal class RoleService(RoleManager<ApplicationRole> roleManager,ApplicationC
                     r.CreatedAt.ToShortDateString()
             )).ToListAsync(cancellationToken);
     }
-
     //-------------------------------------------------------------------------------------------------------
-
     public async Task<RoleDetailsResponseDTO?> GetRoleByIdAsync(string roleId,CancellationToken cancellationToken = default)
     {
         if(await _roleManager.FindByIdAsync(roleId) is not { } role)
@@ -43,9 +35,7 @@ internal class RoleService(RoleManager<ApplicationRole> roleManager,ApplicationC
             permissions.Select(p => p.Value)
         );
     }
-
     //----------------------------------------------------------------------------------------------------------
-
     public async Task<string> CreateRoleAsync(CreateRoleRequestDTO createRoleRequestDTO,CancellationToken cancellationToken = default)
     {
         var roleIsExists = await _roleManager.RoleExistsAsync(createRoleRequestDTO.RoleName);
@@ -72,9 +62,7 @@ internal class RoleService(RoleManager<ApplicationRole> roleManager,ApplicationC
         await _context.SaveChangesAsync(cancellationToken);
         return "Group Created Successfully";
     }
-
     //---------------------------------------------------------------------------------------------------------
-
     public async Task<string> UpdateRoleAsync(string roleId,CreateRoleRequestDTO createRoleRequestDTO,CancellationToken cancellationToken = default)
     {
         var roleIsExists = await _roleManager.Roles.AnyAsync(r => r.Name == createRoleRequestDTO.RoleName && r.Id != roleId);
@@ -106,10 +94,8 @@ internal class RoleService(RoleManager<ApplicationRole> roleManager,ApplicationC
         await _context.RoleClaims.AddRangeAsync(permissionsToAdd,cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
         return "Group Updated Successfully";
-    }
-    
+    }   
     //----------------------------------------------------------------------------------------------------------
-    
     public async Task<string> DeleteRoleAsync(string roleId,CancellationToken cancellationToken = default)
     {
         if(await _roleManager.FindByIdAsync(roleId) is not { } role)
@@ -120,4 +106,5 @@ internal class RoleService(RoleManager<ApplicationRole> roleManager,ApplicationC
             return "Failed to delete role";
         return "Group Deleted Successfully";
     }
+    //------------------------------------------------------------------------------------------
 }

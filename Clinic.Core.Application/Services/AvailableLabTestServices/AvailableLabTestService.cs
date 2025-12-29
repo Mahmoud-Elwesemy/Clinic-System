@@ -1,15 +1,9 @@
 ﻿using AutoMapper;
 using Clinic.Core.Application.Abstraction.AvailableLabTest;
 using Clinic.Core.Application.Abstraction.AvailableLabTest.Models;
-using Clinic.Core.Application.Abstraction.Medicine.Models;
 using Clinic.Core.Domin.Entities;
 using Clinic.Core.Domin.Entities_Helper;
 using Clinic.Core.Domin.UnitOfWork.Contract;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Clinic.Core.Application.Services.AvailableLabTestServices;
 internal class AvailableLabTestService(IUnitOfWork unitOfWork,IMapper mapper):IAvailableLabTestService
@@ -17,13 +11,22 @@ internal class AvailableLabTestService(IUnitOfWork unitOfWork,IMapper mapper):IA
     private readonly IUnitOfWork _unitOfWork = unitOfWork;
     private readonly IMapper _mapper = mapper;
     //------------------------------------------------------------------------------------
-
+    private async Task<bool> IsTestNameExistsAsync(string testName,int? excludeId = null)
+    {
+        var labTests = await _unitOfWork.GetRepository<AvailableLabTest,int>().GetAllAsync();
+        return labTests.Any(t =>
+            !t.IsDeleted &&
+            t.TestName.Trim().ToLower() == testName.Trim().ToLower() &&
+            (!excludeId.HasValue || t.Id != excludeId.Value)
+        );
+    }
+    //------------------------------------------------------------------------------------
     public async Task<IEnumerable<AvailableLabTestDTO>> GetAllAvailableLabTestAsync()
     {
         var AvailableLabTest = await _unitOfWork.GetRepository<AvailableLabTest,int>().GetAllAsync();
         return _mapper.Map<IEnumerable<AvailableLabTestDTO>>(AvailableLabTest);
     }
-
+    //------------------------------------------------------------------------------------
     public async Task<AvailableLabTestDTO> GetAvailableLabTestByIdAsync(int id)
     {
         var AvailableLabTest = await _unitOfWork.GetRepository<AvailableLabTest,int>().GetByIdAsync(id);
@@ -33,69 +36,81 @@ internal class AvailableLabTestService(IUnitOfWork unitOfWork,IMapper mapper):IA
         }
         return _mapper.Map<AvailableLabTestDTO>(AvailableLabTest);
     }
-
+    //------------------------------------------------------------------------------------
     public async Task<IEnumerable<AvailableLabTestDTO>> GetAllIncludingDeletedAsync()
     {
        var AvailableLabTest = await _unitOfWork.GetRepository<AvailableLabTest,int>().GetAllIncludingDeletedAsync();
         return _mapper.Map<IEnumerable<AvailableLabTestDTO>>(AvailableLabTest);
     }
-
+    //------------------------------------------------------------------------------------
     public async Task<IEnumerable<AvailableLabTestDTO>> GetDeletedOnlyAsync()
     {
         var AvailableLabTest = await _unitOfWork.GetRepository<AvailableLabTest,int>().GetDeletedOnlyAsync();
         return _mapper.Map<IEnumerable<AvailableLabTestDTO>>(AvailableLabTest);
     }
-
+    //------------------------------------------------------------------------------------
     public async Task AddAvailableLabTestAsync(AddAvailableLabTestDTO Entity)
     {
         if(Entity == null)
-        {
             throw new ArgumentNullException(nameof(Entity),"Entity cannot be null");
-        }
         if(string.IsNullOrWhiteSpace(Entity.TestName))
-        {
             throw new ArgumentException("Test name cannot be empty",nameof(Entity.TestName));
-        }
         if(Entity.Price <= 0)
-        {
             throw new ArgumentOutOfRangeException(nameof(Entity.Price),"Price must be greater than zero");
-        }
+
+        if(await IsTestNameExistsAsync(Entity.TestName))
+            throw new InvalidOperationException($"A lab test named '{Entity.TestName}' already exists.");
+
         Entity.LabTechnicianId = DefaultUser.LabTechnicianId;
         var newAvailableLabTest = _mapper.Map<AvailableLabTest>(Entity);
         await _unitOfWork.GetRepository<AvailableLabTest,int>().AddAsync(newAvailableLabTest);
         await _unitOfWork.CompleteAsync();
     }
-
+    //------------------------------------------------------------------------------------
     public async Task UpdateAvailableLabTestAsync(UpdateAvailableLabTestDTO Entity)
     {
         var AvailableLabTestRepo = _unitOfWork.GetRepository<AvailableLabTest,int>();
         var existingAvailableLabTest =await  AvailableLabTestRepo.GetByIdAsync(Entity.Id);
         if(existingAvailableLabTest == null)
-        {
             throw new KeyNotFoundException($"Available LabTest with ID {Entity.Id} not found.");
-        }
+
+        if(await IsTestNameExistsAsync(Entity.TestName,Entity.Id))
+            throw new InvalidOperationException($"Another lab test named '{Entity.TestName}' already exists.");
+
         _mapper.Map(Entity,existingAvailableLabTest);
         AvailableLabTestRepo.UpdateAsync(existingAvailableLabTest);
         await _unitOfWork.CompleteAsync();
 
     }
-
+    //------------------------------------------------------------------------------------
     public async Task HardDeleteAvailableLabTestAsync(int id)
     {
         await _unitOfWork.GetRepository<AvailableLabTest,int>().HardDeleteAsync(id);
         await _unitOfWork.CompleteAsync();
     }
-
+    //------------------------------------------------------------------------------------
     public async Task SoftDeleteAvailableLabTestAsync(int id)
     {
         await _unitOfWork.GetRepository<AvailableLabTest,int>().SoftDeleteAsync(id);
         await _unitOfWork.CompleteAsync();
     }
-
+    //------------------------------------------------------------------------------------
     public async Task RestoreAvailableLabTestAsync(int id)
     {
-        await _unitOfWork.GetRepository<AvailableLabTest,int>().RestoreByIdAsync(id);
+        var repo = _unitOfWork.GetRepository<AvailableLabTest,int>();
+        var test = await repo.GetByIdAsync(id);
+
+        if(test == null)
+            throw new KeyNotFoundException($"Lab test with ID {id} not found.");
+
+        if(!test.IsDeleted)
+            throw new InvalidOperationException("This lab test is already active.");
+
+        if(await IsTestNameExistsAsync(test.TestName,test.Id))
+            throw new InvalidOperationException($"Cannot restore: A lab test with the name '{test.TestName}' already exists.");
+
+        await repo.RestoreByIdAsync(id);
         await _unitOfWork.CompleteAsync();
     }
-
+    //------------------------------------------------------------------------------------
 }

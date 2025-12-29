@@ -17,17 +17,17 @@ public class Visit
     // Objects From Patient With Many To One Relationship And Foreign Key Is PatientId
     [ForeignKey(nameof(Patient))]
     public string PatientId { get; set; } = string.Empty;
-    public virtual Patient Patient { get; set; } = new();
+    public virtual Patient? Patient { get; set; } 
 
     // Object From Doctor With Many To One Relationship And Foreign Key Is DoctorId
     [ForeignKey(nameof(Doctor))]
     public string DoctorId { get; set; } = string.Empty;
-    public virtual Doctor Doctor { get; set; } = new();
+    public virtual Doctor? Doctor { get; set; }  
 
     // Object From Appointment With Many To One Relationship And Foreign Key Is AppointmentId
     [ForeignKey(nameof(Appointment))]
     public int AppointmentId { get; set; }
-    public virtual Appointment Appointment { get; set; } = new();
+    public virtual Appointment? Appointment { get; set; } 
 
     // collection of Diagnosis, Treatment and LabTest with one to many relationship
     public virtual ICollection<Diagnosis> Diagnoses { get; set; } = new List<Diagnosis>();

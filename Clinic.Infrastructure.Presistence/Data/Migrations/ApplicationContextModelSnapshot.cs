@@ -62,7 +62,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         {
                             Id = "01961d25-b4da-7184-a2a8-765486bd4857",
                             ConcurrencyStamp = "EAE00686-2608-4516-AD1B-F96CD87C475E",
-                            CreatedAt = new DateTime(2025, 5, 24, 13, 48, 59, 491, DateTimeKind.Utc).AddTicks(7554),
+                            CreatedAt = new DateTime(2025, 6, 2, 18, 8, 18, 544, DateTimeKind.Utc).AddTicks(2188),
                             IsDeleted = false,
                             Name = "Doctor",
                             NormalizedName = "DOCTOR"
@@ -71,7 +71,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         {
                             Id = "01961d25-b4da-75a5-a1f4-a7aa10e421ed",
                             ConcurrencyStamp = "386C6E14-D0FD-40FF-80D0-74B419360EF0",
-                            CreatedAt = new DateTime(2025, 5, 24, 13, 48, 59, 492, DateTimeKind.Utc).AddTicks(375),
+                            CreatedAt = new DateTime(2025, 6, 2, 18, 8, 18, 544, DateTimeKind.Utc).AddTicks(4809),
                             IsDeleted = false,
                             Name = "Pharmacist",
                             NormalizedName = "PHARMACIST"
@@ -80,7 +80,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         {
                             Id = "01961d25-b4da-71e9-a488-1b8db232e984",
                             ConcurrencyStamp = "1420D50C-F54D-4503-88E8-A2EFA3BD7137",
-                            CreatedAt = new DateTime(2025, 5, 24, 13, 48, 59, 492, DateTimeKind.Utc).AddTicks(403),
+                            CreatedAt = new DateTime(2025, 6, 2, 18, 8, 18, 544, DateTimeKind.Utc).AddTicks(4843),
                             IsDeleted = false,
                             Name = "LabTechnician",
                             NormalizedName = "LABTECHNICIAN"
@@ -89,7 +89,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         {
                             Id = "01961d25-b4da-72bb-a3a9-7e102ec2be31",
                             ConcurrencyStamp = "CC350D3E-101D-4AA1-B2C9-5D92D13FD38E",
-                            CreatedAt = new DateTime(2025, 5, 24, 13, 48, 59, 492, DateTimeKind.Utc).AddTicks(421),
+                            CreatedAt = new DateTime(2025, 6, 2, 18, 8, 18, 544, DateTimeKind.Utc).AddTicks(4854),
                             IsDeleted = false,
                             Name = "Receptionist",
                             NormalizedName = "RECEPTIONIST"
@@ -98,7 +98,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         {
                             Id = "01961d25-b4da-9999-a1b2-123456789abc",
                             ConcurrencyStamp = "A3C5D9C2-7F54-4A2C-8456-9E6C7E8B1E2A",
-                            CreatedAt = new DateTime(2025, 5, 24, 13, 48, 59, 492, DateTimeKind.Utc).AddTicks(430),
+                            CreatedAt = new DateTime(2025, 6, 2, 18, 8, 18, 544, DateTimeKind.Utc).AddTicks(4863),
                             IsDeleted = false,
                             Name = "Patient",
                             NormalizedName = "PATIENT"
@@ -219,11 +219,17 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("DoctorId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
                     b.Property<string>("PatientId")
                         .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PatientId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("PaymentType")
@@ -236,7 +242,11 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
 
                     b.HasIndex("DoctorId");
 
+                    b.HasIndex("DoctorId1");
+
                     b.HasIndex("PatientId");
+
+                    b.HasIndex("PatientId1");
 
                     b.ToTable("Appointments");
                 });
@@ -321,10 +331,6 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
-
-                    b.Property<string>("TestName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TestResult")
                         .HasColumnType("nvarchar(max)");
@@ -450,7 +456,6 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("DoctorId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsDeleted")
@@ -460,7 +465,6 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LabTechnicianId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Message")
@@ -468,20 +472,21 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PatientId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PharmacistId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("ReceptionistId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
@@ -494,6 +499,8 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                     b.HasIndex("PharmacistId");
 
                     b.HasIndex("ReceptionistId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("UserNotifications");
                 });
@@ -547,7 +554,6 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("DoctorId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<TimeOnly?>("EndTime")
@@ -557,11 +563,9 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("LabTechnicianId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("PharmacistId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<TimeOnly?>("StartTime")
@@ -1303,7 +1307,13 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                     b.Property<string>("Biography")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ConsultationDurationInMinutes")
+                        .HasColumnType("int");
+
                     b.Property<int>("Degree")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FollowUpDurationInMinutes")
                         .HasColumnType("int");
 
                     b.Property<string>("Specialization")
@@ -1318,7 +1328,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                             Id = "0195d439-9ca1-7873-9c14-a4bc1c201593",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "0195d43b-a808-757b-9c3e-bf90c6091133",
-                            CreatedAt = new DateTime(2025, 5, 24, 13, 48, 59, 476, DateTimeKind.Utc).AddTicks(7216),
+                            CreatedAt = new DateTime(2025, 6, 2, 18, 8, 18, 529, DateTimeKind.Utc).AddTicks(789),
                             Email = "Weso430@gmail.com",
                             EmailConfirmed = true,
                             FullName = "Weso Admin",
@@ -1327,14 +1337,16 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "WESO430@GMAIL.COM",
                             NormalizedUserName = "WESO430@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDT+/Um+bRkHpoMZ7s1PybsriQfS3vJFnY29Il8yhGITsbuGj5EBHHsP/2N76QtV7g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM43QmJkxKs66+hBHOfjYFSj/wGY6jR00ZSDdz9+hspCA5Jjn64fUvCcm0TrTcyoCQ==",
                             PhoneNumber = "01032500077",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "0195d43be3f271878cc37be7dfc34361",
                             TwoFactorEnabled = false,
                             UserName = "Weso430@gmail.com",
                             Biography = "",
+                            ConsultationDurationInMinutes = 30,
                             Degree = 1,
+                            FollowUpDurationInMinutes = 15,
                             Specialization = "General"
                         });
                 });
@@ -1351,7 +1363,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                             Id = "0195d439-9ca1-7873-9c14-a4bc1c203333",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "0195d43blab-conc",
-                            CreatedAt = new DateTime(2025, 5, 24, 13, 48, 59, 491, DateTimeKind.Utc).AddTicks(5469),
+                            CreatedAt = new DateTime(2025, 6, 2, 18, 8, 18, 544, DateTimeKind.Utc).AddTicks(66),
                             Email = "lab@clinic.com",
                             EmailConfirmed = true,
                             FullName = "Lab User",
@@ -1360,7 +1372,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "LAB@CLINIC.COM",
                             NormalizedUserName = "LAB@CLINIC.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDT+/Um+bRkHpoMZ7s1PybsriQfS3vJFnY29Il8yhGITsbuGj5EBHHsP/2N76QtV7g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM43QmJkxKs66+hBHOfjYFSj/wGY6jR00ZSDdz9+hspCA5Jjn64fUvCcm0TrTcyoCQ==",
                             PhoneNumber = "01000000002",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "0195d43blab-sec",
@@ -1382,9 +1394,9 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                     b.Property<int?>("BloodType")
                         .HasColumnType("int");
 
-                    b.Property<int>("NationalId")
+                    b.Property<string>("NationalId")
                         .HasMaxLength(14)
-                        .HasColumnType("int");
+                        .HasColumnType("nvarchar(14)");
 
                     b.HasDiscriminator().HasValue("Patient");
                 });
@@ -1401,7 +1413,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                             Id = "0195d439-9ca1-7873-9c14-a4bc1c202222",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "0195d43bpharma-conc",
-                            CreatedAt = new DateTime(2025, 5, 24, 13, 48, 59, 491, DateTimeKind.Utc).AddTicks(4560),
+                            CreatedAt = new DateTime(2025, 6, 2, 18, 8, 18, 543, DateTimeKind.Utc).AddTicks(9117),
                             Email = "pharmacist@clinic.com",
                             EmailConfirmed = true,
                             FullName = "Pharma User",
@@ -1410,7 +1422,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "PHARMACIST@CLINIC.COM",
                             NormalizedUserName = "PHARMACIST@CLINIC.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDT+/Um+bRkHpoMZ7s1PybsriQfS3vJFnY29Il8yhGITsbuGj5EBHHsP/2N76QtV7g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM43QmJkxKs66+hBHOfjYFSj/wGY6jR00ZSDdz9+hspCA5Jjn64fUvCcm0TrTcyoCQ==",
                             PhoneNumber = "01000000001",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "0195d43bpharma-sec",
@@ -1434,7 +1446,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                             Id = "0195d439-9ca1-7873-9c14-a4bc1c204444",
                             AccessFailedCount = 0,
                             ConcurrencyStamp = "0195d43brecep-conc",
-                            CreatedAt = new DateTime(2025, 5, 24, 13, 48, 59, 491, DateTimeKind.Utc).AddTicks(6348),
+                            CreatedAt = new DateTime(2025, 6, 2, 18, 8, 18, 544, DateTimeKind.Utc).AddTicks(956),
                             Email = "receptionist@clinic.com",
                             EmailConfirmed = true,
                             FullName = "Reception User",
@@ -1443,7 +1455,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "RECEPTIONIST@CLINIC.COM",
                             NormalizedUserName = "RECEPTIONIST@CLINIC.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDT+/Um+bRkHpoMZ7s1PybsriQfS3vJFnY29Il8yhGITsbuGj5EBHHsP/2N76QtV7g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEM43QmJkxKs66+hBHOfjYFSj/wGY6jR00ZSDdz9+hspCA5Jjn64fUvCcm0TrTcyoCQ==",
                             PhoneNumber = "01000000003",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "0195d43brecep-sec",
@@ -1455,16 +1467,24 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
             modelBuilder.Entity("Clinic.Core.Domin.Entities.Appointment", b =>
                 {
                     b.HasOne("Clinic.Core.Domin.Entities.Users.Doctor", "Doctor")
-                        .WithMany("Appointments")
+                        .WithMany()
                         .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Clinic.Core.Domin.Entities.Users.Patient", "Patient")
+                    b.HasOne("Clinic.Core.Domin.Entities.Users.Doctor", null)
                         .WithMany("Appointments")
+                        .HasForeignKey("DoctorId1");
+
+                    b.HasOne("Clinic.Core.Domin.Entities.Users.Patient", "Patient")
+                        .WithMany()
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.HasOne("Clinic.Core.Domin.Entities.Users.Patient", null)
+                        .WithMany("Appointments")
+                        .HasForeignKey("PatientId1");
 
                     b.Navigation("Doctor");
 
@@ -1555,45 +1575,33 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
 
             modelBuilder.Entity("Clinic.Core.Domin.Entities.UserNotification", b =>
                 {
-                    b.HasOne("Clinic.Core.Domin.Entities.Users.Doctor", "Doctor")
+                    b.HasOne("Clinic.Core.Domin.Entities.Users.Doctor", null)
                         .WithMany("UserNotifications")
-                        .HasForeignKey("DoctorId")
+                        .HasForeignKey("DoctorId");
+
+                    b.HasOne("Clinic.Core.Domin.Entities.Users.LabTechnician", null)
+                        .WithMany("UserNotifications")
+                        .HasForeignKey("LabTechnicianId");
+
+                    b.HasOne("Clinic.Core.Domin.Entities.Users.Patient", null)
+                        .WithMany("UserNotifications")
+                        .HasForeignKey("PatientId");
+
+                    b.HasOne("Clinic.Core.Domin.Entities.Users.Pharmacist", null)
+                        .WithMany("UserNotifications")
+                        .HasForeignKey("PharmacistId");
+
+                    b.HasOne("Clinic.Core.Domin.Entities.Users.Receptionist", null)
+                        .WithMany("UserNotifications")
+                        .HasForeignKey("ReceptionistId");
+
+                    b.HasOne("Clinic.Core.Domin.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Clinic.Core.Domin.Entities.Users.LabTechnician", "LabTechnician")
-                        .WithMany("UserNotifications")
-                        .HasForeignKey("LabTechnicianId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Clinic.Core.Domin.Entities.Users.Patient", "Patient")
-                        .WithMany("UserNotifications")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Clinic.Core.Domin.Entities.Users.Pharmacist", "Pharmacist")
-                        .WithMany("UserNotifications")
-                        .HasForeignKey("PharmacistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Clinic.Core.Domin.Entities.Users.Receptionist", "Receptionist")
-                        .WithMany("UserNotifications")
-                        .HasForeignKey("ReceptionistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Doctor");
-
-                    b.Navigation("LabTechnician");
-
-                    b.Navigation("Patient");
-
-                    b.Navigation("Pharmacist");
-
-                    b.Navigation("Receptionist");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Clinic.Core.Domin.Entities.Visit", b =>
@@ -1627,21 +1635,15 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
                 {
                     b.HasOne("Clinic.Core.Domin.Entities.Users.Doctor", "Doctor")
                         .WithMany("WorkingDays")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DoctorId");
 
                     b.HasOne("Clinic.Core.Domin.Entities.Users.LabTechnician", "LabTechnician")
                         .WithMany("WorkingDays")
-                        .HasForeignKey("LabTechnicianId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("LabTechnicianId");
 
                     b.HasOne("Clinic.Core.Domin.Entities.Users.Pharmacist", "Pharmacist")
                         .WithMany("WorkingDays")
-                        .HasForeignKey("PharmacistId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PharmacistId");
 
                     b.Navigation("Doctor");
 
@@ -1703,8 +1705,7 @@ namespace Clinic.Infrastructure.Presistence.Data.Migrations
 
             modelBuilder.Entity("Clinic.Core.Domin.Entities.Appointment", b =>
                 {
-                    b.Navigation("Visit")
-                        .IsRequired();
+                    b.Navigation("Visit");
                 });
 
             modelBuilder.Entity("Clinic.Core.Domin.Entities.AvailableLabTest", b =>

@@ -11,7 +11,7 @@ namespace Clinic.Core.Domin.Entities.Users;
 public class Patient : ApplicationUser
 {
     [MaxLength(14)]
-    public int NationalId { get; set; } 
+    public string? NationalId { get; set; } 
     public string? Address { get; set; } = string.Empty;
     public BloodType? BloodType { get; set; } 
     public DateTime? BirthDate { get; set; } = DateTime.UtcNow;
@@ -25,5 +25,4 @@ public class Patient : ApplicationUser
 
     // Collection Of UserNotification With One To Many Relationship
     public virtual ICollection<UserNotification> UserNotifications { get; set; } = new List<UserNotification>();
-
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Clinic.Core.Application.Abstraction.AvailableLabTest.Models;
 public record AvailableLabTestDTO
@@ -17,6 +12,7 @@ public record AvailableLabTestDTO
     public string LabTechnicianId { get; set; } = string.Empty;
     public bool IsDeleted { get; set; } = false;
 }
+//------------------------------------------------------------------------------------------
 public record AddAvailableLabTestDTO
 {
     public string TestName { get; set; } = string.Empty;
@@ -25,6 +21,7 @@ public record AddAvailableLabTestDTO
     [JsonIgnore]
     public string LabTechnicianId { get; set; } = string.Empty;
 }
+//------------------------------------------------------------------------------------------
 public record UpdateAvailableLabTestDTO
 {
     public int Id { get; set; }

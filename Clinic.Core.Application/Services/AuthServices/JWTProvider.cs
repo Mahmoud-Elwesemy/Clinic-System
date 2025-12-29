@@ -3,24 +3,21 @@ using Clinic.Core.Domin.Entities;
 using Clinic.Core.Domin.Entities_Helper;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 namespace Clinic.Core.Application.Services.AuthServices;
 internal class JWTProvider:IJWTProvider
 {
     private readonly JwtSettings _jwtSettings;
-
+    //------------------------------------------------------------------------------------------
     public JWTProvider(IOptions<JwtSettings> options)
     {
         _jwtSettings = options.Value;
     }
+    //------------------------------------------------------------------------------------------
     public (string token, int expiresIn) GenerateJwtToken(ApplicationUser user,IEnumerable<string> roles,IEnumerable<string> permissions)
     {
         Claim[] claims = [
@@ -45,4 +42,5 @@ internal class JWTProvider:IJWTProvider
         );
         return (new JwtSecurityTokenHandler().WriteToken(token), _jwtSettings.ExpiresInDays * 24 * 60);
     }
+    //------------------------------------------------------------------------------------------
 }

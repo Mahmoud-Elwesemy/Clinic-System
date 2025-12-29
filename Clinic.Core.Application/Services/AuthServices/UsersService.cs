@@ -2,14 +2,10 @@
 using Clinic.Core.Application.Abstraction.Auth;
 using Clinic.Core.Application.Abstraction.Auth.Model;
 using Clinic.Core.Domin.Entities;
+using Clinic.Core.Domin.Entities.Users;
 using Clinic.Infrastructure.Presistence.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Clinic.Core.Application.Services.AuthServices;
 internal class UsersService(UserManager<ApplicationUser> userManager,IJWTProvider jWTProvider,IMapper mapper,ApplicationContext context):IUserService
@@ -19,21 +15,19 @@ internal class UsersService(UserManager<ApplicationUser> userManager,IJWTProvide
     private readonly IMapper _mapper = mapper;
     private readonly ApplicationContext _context = context;
     //-------------------------------------------------------------------------------------------------------
-
     public async Task<string> RegisterPatientAsync(RegisterPatientDTO DTO,CancellationToken cancellationToken = default)
     {
         if(await _userManager.Users.AnyAsync(u => u.Email == DTO.Email))
             return "Another user with the same Email is already exist";
         if(await _userManager.Users.AnyAsync(u => u.PhoneNumber == DTO.PhoneNumber))
             return "Another user with the same PhoneNumber is already exist";
-        var user = _mapper.Map<ApplicationUser>(DTO);
+        var user = _mapper.Map<Patient>(DTO);
         var result = await _userManager.CreateAsync(user,DTO.Password);
         if(!result.Succeeded)
             return string.Join(",",result.Errors.Select(e => e.Description));
         await _userManager.AddToRoleAsync(user,DTO.RoleName);
         return string.Empty;
     }
-
     //-------------------------------------------------------------------------------------------------------
     public async Task<LoginResponseDTO> LoginAsync(LoginDTO DTO,CancellationToken cancellationToken = default)
     {
@@ -65,7 +59,6 @@ internal class UsersService(UserManager<ApplicationUser> userManager,IJWTProvide
             expiresIn
         );
     }
-
     //-------------------------------------------------------------------------------------------------------
     public async Task<AccountProfileDTO?> GetAccountProfileAsync(string userId,CancellationToken cancellationToken = default)
     {
@@ -77,4 +70,5 @@ internal class UsersService(UserManager<ApplicationUser> userManager,IJWTProvide
 
         return _mapper.Map<AccountProfileDTO>(accountDetails);
     }
+    //------------------------------------------------------------------------------------------
 }

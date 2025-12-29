@@ -19,16 +19,16 @@ public class WorkingDay
 
     // Object From Doctor With Many To One Relationship And Foreign Key Is DoctorId
     [ForeignKey(nameof(Doctor))]
-    public string DoctorId { get; set; } = string.Empty;
+    public string? DoctorId { get; set; } 
     public virtual Doctor? Doctor { get; set; }
 
     // Object From Pharmacist With Many To One Relationship And Foreign Key Is PharmacistId
     [ForeignKey(nameof(Pharmacist))]
-    public string PharmacistId { get; set; } = string.Empty;
+    public string? PharmacistId { get; set; } 
     public virtual Pharmacist? Pharmacist { get; set; }
 
     // Object From LabTechnician With Many To One Relationship And Foreign Key Is LabTechnicianId
     [ForeignKey(nameof(LabTechnician))]
-    public string LabTechnicianId { get; set; } = string.Empty;
+    public string? LabTechnicianId { get; set; } 
     public virtual LabTechnician? LabTechnician { get; set; }
 }

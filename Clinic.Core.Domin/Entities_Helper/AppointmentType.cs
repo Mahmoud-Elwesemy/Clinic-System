@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Clinic.Core.Domin.Entities_Helper;
 public enum AppointmentType
 {
-    Regular = 1,
-    Urgent = 2
+    [Display(Name = "كشف عادي")]
+    Regular = 0,
+
+    [Display(Name = "كشف مستعجل")]
+    Urgent = 1,
+
+    [Display(Name = "إعادة كشف")]
+    FollowUp = 2
 }

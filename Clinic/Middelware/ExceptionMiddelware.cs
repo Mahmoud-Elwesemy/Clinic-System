@@ -2,15 +2,21 @@
 using System.Net;
 using System.Text.Json;
 
-namespace Clinic.APIs.Middelware;
+namespace Clinic.APIs.Middleware;
 
-public class ExceptionMiddelware
+public class ExceptionMiddleware
 {
     private readonly RequestDelegate _next;
-    public ExceptionMiddelware(RequestDelegate next)
+    private readonly IHostEnvironment _env;
+    private readonly ILogger<ExceptionMiddleware> _logger;
+    //------------------------------------------------------------------------------------------
+    public ExceptionMiddleware(RequestDelegate next,IHostEnvironment env,ILogger<ExceptionMiddleware> logger)
     {
         _next = next;
+        _env = env;
+        _logger = logger;
     }
+    //------------------------------------------------------------------------------------------
     public async Task Invoke(HttpContext context)
     {
         try
@@ -22,12 +28,28 @@ public class ExceptionMiddelware
             await HandleExceptionAsync(context,ex);
         }
     }
+    //------------------------------------------------------------------------------------------
     private Task HandleExceptionAsync(HttpContext context,Exception exception)
     {
+        _logger.LogError(exception,"Unhandled exception occurred");
+
+        int statusCode = exception switch
+        {
+            UnauthorizedAccessException => (int) HttpStatusCode.Unauthorized,
+            KeyNotFoundException => (int) HttpStatusCode.NotFound,
+            InvalidOperationException => (int) HttpStatusCode.BadRequest,
+            _ => (int) HttpStatusCode.InternalServerError
+        };
+
+        var response = _env.IsDevelopment()
+            ? new ApiExceptions(statusCode,exception.Message,exception.StackTrace)
+            : new ApiExceptions(statusCode,"حدث خطأ غير متوقع، برجاء المحاولة لاحقاً.");
+
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
-        var response = new ApiExceptions(context.Response.StatusCode,exception.Message,exception.StackTrace!);
-        var jsonresponse = JsonSerializer.Serialize(response);
-        return context.Response.WriteAsync(jsonresponse);
+        context.Response.StatusCode = statusCode;
+
+        var jsonResponse = JsonSerializer.Serialize(response);
+        return context.Response.WriteAsync(jsonResponse);
     }
+    //------------------------------------------------------------------------------------------
 }

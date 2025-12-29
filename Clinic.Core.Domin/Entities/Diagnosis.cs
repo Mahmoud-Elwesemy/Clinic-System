@@ -17,5 +17,5 @@ public class Diagnosis
     // Object From Visit With Many To One Relationship And Foreign Key Is VisitId
     [ForeignKey(nameof(Visit))]
     public int VisitId { get; set; }
-    public virtual Visit Visit { get; set; } = new();
+    public virtual Visit? Visit { get; set; } 
 }

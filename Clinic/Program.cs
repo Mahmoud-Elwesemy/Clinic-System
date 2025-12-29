@@ -14,6 +14,7 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using Clinic.APIs.Middleware;
 
 namespace Clinic
 {
@@ -58,7 +59,7 @@ namespace Clinic
 
             #region Configure ]Authentication
             var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
-            if(jwtSettings == null)
+            if(string.IsNullOrEmpty(jwtSettings?.SecretKey))
             {
                 throw new Exception("JWT settings are not configured properly.");
             }
@@ -139,11 +140,12 @@ namespace Clinic
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseStatusCodePagesWithReExecute("/errors/{0}");
             app.UseHttpsRedirection();
+            app.UseCors("AllowAllOrigins");
             app.UseAuthentication();
             app.UseAuthorization();
-
 
             app.MapControllers(); 
             #endregion

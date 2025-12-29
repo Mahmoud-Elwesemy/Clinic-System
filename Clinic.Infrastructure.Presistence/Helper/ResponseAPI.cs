@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace Clinic.Infrastructure.Presistence.Helper;
 
-namespace Clinic.Infrastructure.Presistence.Helper;
 public class ResponseAPI
 {
+    public int StatusCode { get; set; }
+    public string? Message { get; set; }
+    //------------------------------------------------------------------------------------------
     public ResponseAPI(int statusCode,string? message = null)
     {
         StatusCode = statusCode;
         Message = message ?? GetMessageFromStatusCode(StatusCode);
     }
+    //------------------------------------------------------------------------------------------
     private string GetMessageFromStatusCode(int statusCode)
     {
-        return StatusCode switch
+        return statusCode switch
         {
             200 => "Success",
             201 => "Created",
@@ -27,7 +26,5 @@ public class ResponseAPI
             _ => "Unknown"
         };
     }
-    public int StatusCode { get; set; }
-    public string? Message { get; set; }
-
+    //------------------------------------------------------------------------------------------
 }

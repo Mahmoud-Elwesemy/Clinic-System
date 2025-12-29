@@ -50,6 +50,17 @@ public class ApplicationContext(DbContextOptions<ApplicationContext> options):Id
         .HasOne(a => a.Visit)
         .WithOne(v => v.Appointment)
         .HasForeignKey<Visit>(v => v.AppointmentId);
+        builder.Entity<Appointment>()
+        .HasOne(a => a.Doctor)
+        .WithMany()
+        .HasForeignKey(a => a.DoctorId)
+        .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Appointment>()
+        .HasOne(a => a.Patient)
+        .WithMany()
+        .HasForeignKey(a => a.PatientId)
+        .OnDelete(DeleteBehavior.Restrict);
 
         #region Seed Data
         var passwordHasher = new PasswordHasher<ApplicationUser>();

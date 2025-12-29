@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Clinic.Core.Domin.Repositories.contract;
+﻿namespace Clinic.Core.Domin.Repositories.contract;
 // This Is A Generic Repository Interface That Contains The Basic CRUD Operations
 public interface IGenericRepository<T, Tkey> where T : class where Tkey : IEquatable<Tkey>
 {

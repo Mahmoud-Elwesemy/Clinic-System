@@ -1,6 +1,5 @@
 ﻿using Clinic.Core.Application.Abstraction;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -11,8 +10,8 @@ namespace Clinic.APIs.Controllers;
 public class ProfileController(IServiceManager serviceManager):ControllerBase
 {
     private readonly IServiceManager _serviceManager = serviceManager;
-
-    [HttpGet("")]
+    //--------------------------------------------------------------------------------------
+    [HttpGet("GetProfile")]
     public async Task<ActionResult> GetAccountProfile()
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -23,4 +22,5 @@ public class ProfileController(IServiceManager serviceManager):ControllerBase
             return NotFound("User not found.");
         return Ok(accountProfile);
     }
+    //--------------------------------------------------------------------------------------
 }
